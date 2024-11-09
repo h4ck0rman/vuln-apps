@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate XML Form</title>
+    <link href="/css/tailwind.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="w-full max-w-xl mx-auto bg-white rounded-lg shadow-md p-8">
+        <h1 class="text-2xl font-bold mb-6 text-gray-800 text-center">Customer Details</h1>
+
+        <!-- Form for XML Data -->
+        <form id="xmlForm" action="/submit-xml" method="POST" class="space-y-6">
+            <label class="block">
+                <span class="text-gray-700">Customer ID</span>
+                <input type="text" id="cId" name="cId" class="mt-1 block w-full p-3 border border-gray-300 rounded-md" placeholder="Enter Customer ID" required>
+            </label>
+
+            <label class="block">
+                <span class="text-gray-700">First Name</span>
+                <input type="text" id="firstname" name="firstname" class="mt-1 block w-full p-3 border border-gray-300 rounded-md" placeholder="Enter First Name" required>
+            </label>
+
+            <label class="block">
+                <span class="text-gray-700">Last Name</span>
+                <input type="text" id="lastname" name="lastname" class="mt-1 block w-full p-3 border border-gray-300 rounded-md" placeholder="Enter Last Name" required>
+            </label>
+
+            <label class="block">
+                <span class="text-gray-700">Address</span>
+                <input type="text" id="address" name="address" class="mt-1 block w-full p-3 border border-gray-300 rounded-md" placeholder="Enter Address" required>
+            </label>
+
+            <button type="button" onclick="submitXMLReq()" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-md hover:bg-blue-600">
+                Submit Form
+            </button>
+        </form>
+
+        <div ><p id="thankYouMessage"></p></div>
+    </div>
+
+    <script>
+        function displayThankYouMessage(message) {            
+            // Append the message to the body or another specific element
+            const paragraph = document.getElementById("thankYouMessage");
+            paragraph.textContent = message;
+        }
+
+        function submitXMLReq() {
+            const cId = document.getElementById("cId").value;
+            const firstname = document.getElementById("firstname").value;
+            const lastname = document.getElementById("lastname").value;
+            const address = document.getElementById("address").value;
+
+            // Construct the XML data string
+            // Construct the XML data string in a compact format
+            const xmlData = `<?xml version="1.0" encoding="UTF-8" standalone="no"?><form><cId>${cId}</cId><firstname>${firstname}</firstname><lastname>${lastname}</lastname><address>${address}</address></form>`;
+
+            // Send the XML data as a POST request
+            fetch('/submit-xml', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/xml'
+                },
+                body: xmlData
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json(); // Convert the response to JSON
+            })
+            .then(data => {
+                // Now you can access all fields in the JSON object
+                console.log("Fetched Data:", data);
+                
+                // Print each field individually
+                console.log("First Name:", data.firstname);
+                console.log("Last Name:", data.lastname);
+                console.log("Customer ID:", data.cId);
+                console.log("Address:", data.address);
+
+                // Display a thank you message with one of the fields
+                displayThankYouMessage(`Fetched Data: ${data.firstname}`);
+            }).catch(error => {
+                console.error("Error submitting XML data:", error);
+            });
+        }
+
+    </script>
+    
+</body>
+</html>
