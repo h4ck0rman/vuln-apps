@@ -1,9 +1,12 @@
-const express = require('express')
+const express = require('express');
+const path = require('path');
 const app = express();
 const PORT = 8888;
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({extended:true}));
+app.set("views", path.join(__dirname, "views"));
+app.use(express.static(path.join(__dirname, "public")));
 
 // Middleware for logging requests
 app.use((req, res, next) => {
@@ -39,8 +42,8 @@ app.get('/thankyou', (req, res) => {
 });
 
 // Error page for invalid form submission
-app.get('/error', (req, res) => {
-    res.render('error', { message: "Oops! Something went wrong." });
+app.get('/main', (req, res) => {
+    res.render('main');
 });
 
 app.listen(PORT, () => {
