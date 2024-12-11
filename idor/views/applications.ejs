@@ -1,0 +1,108 @@
+<!-- views/form.ejs -->
+<!DOCTYPE html>
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<!-- -->
+<title>View Application | Westpac</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+    <!-- Header section with logo -->
+    <div class="w-screen py-2 flex flex-row justify-between items-center">
+        <!-- Left-aligned Image -->
+        <img class="ml-0 max-w-none px-5" src="/images/logo-wbg-multibrand-large.svg" alt="Logo"/>
+    
+        <!-- Right-aligned Text -->
+        <div class="flex flex-row items-center px-5 divide-x">
+            <div></div>
+            <h3 class="mr-0 text-2xl font-semibold uppercase w-full px-5">► <%= username %></h3>
+        </div>
+    </div>
+    
+    <hr>
+
+    <div class="container w-1/2 mx-auto flex flex-col mt-20 bg-white shadow-md rounded-lg p-8 space-y-6 border-t border-red">
+        <form action="/applications/view" method="GET" id="applicationForm">
+            <div class="flex flex-col space-y-10">
+                <h1 class="text-4xl font-semibold">Select an Application</h1>
+                <select name="appId" id="applicationSelect" class="py-5 border border-black rounded px-5">
+                    <% applications.forEach(function(application) { %>
+                        <option value="<%= application.id %>" class="py-2">
+                            <%= application.application_name %> - <%= application.id %>
+                        </option>
+                    <% }); %>
+                </select>
+
+                <button class="mt-5 w-full py-5 bg-indigo-900 hover:bg-white hover:text-black text-white rounded border border-black" type="submit">
+                    View Application
+                </button>
+            </div>
+        </form>
+    </div>
+
+    
+
+    
+    <div class="w-screen bg-white fixed bottom-0 flex flex-col items-center">
+        <div class="container w-full py-3">
+            <div class="flex flex-row py-3 divide-x">
+                <div class="flex flex-col px-6"> 
+                    <ul>
+                        <li>
+                            <a class="text-red-600" href="/">> About</a>    
+                        </li>
+                        <li>
+                            <a class="text-red-600" href="/">> Contact Us</a>   
+                        </li>
+                        <li>
+                            <a class="text-red-600" href="/">> Home Loan</a>   
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="flex flex-col px-6">
+                    <ul>
+                        <li>
+                            <a class="text-red-600" href="/">> Social Media</a>   
+                        </li>
+                        <li>
+                            <a class="text-red-600" href="/">> Terms of Conditions</a>   
+                        </li>
+                        <li>
+                            <a class="text-red-600" href="/">> Privacy Policy</a>   
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <hr > 
+            <footer>
+                <div class="flex flex-row items-center justify-between py-5">
+                    <div>
+                        Our site and your transactions are secure. You can read our
+                        <a class="text-red-600" href="https://www.westpac.com.au">security information.</a><br>
+                        © 2024 Westpac Banking Corporation ABN 33 007 457 141 AFSL and Australian credit license 233714
+                    </div>
+                    
+                    <div ><img class="max-w-full" src="/images/logo-wbg-multibrand-large.svg"/></div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // Optional JavaScript to handle form submission
+        document.getElementById('applicationForm').addEventListener('submit', function(event) {
+            const selectedAppId = document.getElementById('applicationSelect').value;
+            if (!selectedAppId) {
+                event.preventDefault();
+                alert('Please select an application.');
+            }
+        });
+    </script>
+</body>
+</html>
+ 

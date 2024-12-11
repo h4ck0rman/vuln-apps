@@ -10,16 +10,36 @@ router.get('/user', authenticateToken, (req, res) => {
     res.json({ message: `Hello, User ${req.user.id}!` });
 });
 
-// Insecure endpoint: View application details by application ID, including sensitive data (IDOR vulnerability)
-router.get('/application/:appId', authenticateToken, (req, res) => {
-    const appId = req.params.appId;
+router.get('/view-application/:id', authenticateToken, (req, res) => {
+    const applicationId = req.params.id;
 
-    // Fetch application data, including sensitive fields
-    db.get(`SELECT * FROM applications`, (err, row) => {
-        if (err || !row) {
-            return res.status(404).json({ error: "Application not found" });
+    // Query the database for the application details
+    db.get(`SELECT * FROM applications WHERE id = ?`, [applicationId], (err, application) => {
+        if (err) {
+            console.error("Error fetching application:", err.message);
+            return res.status(500).send("Internal Server Error");
         }
-        res.json(row); // Respond with application data, including sensitive information
+        if (!application) {
+            return res.status(404).send("Application not found");
+        }
+
+        // Render the view-application page with application details
+        res.render('view-application', { application });
+    });
+});
+
+
+
+// Get all applications for the authenticated user
+router.get('/applications/view', authenticateToken, (req, res) => {
+    const userId = req.user.id;
+
+    // Fetch all applications for the authenticated user
+    db.all(`SELECT * FROM applications WHERE user_id = ?`, [userId], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ error: "Error retrieving applications" });
+        }
+        res.json(rows); // Respond with the list of applications for the user
     });
 });
 

@@ -20,17 +20,17 @@ app.use(bodyParser.text({ type: "application/xml" }));
 
 // Home route to display the form
 app.get("/", (req, res) => {
-  res.render("index", { response: null });
+  res.render("main", { response: null });
 });
 
 // Route to handle form submission and generate XML
 app.post("/submit-xml", async (req, res) => {
     // Receive XML data from the form
     const xmlData = req.body; // Assuming XML data is sent in the `xmlData` field
-    console.log(xmlData)
+
     try {
         // Send the XML data to the backend API
-        const apiResponse = await axios.post("http://192.168.1.119:8080/api/parse-xml", xmlData, {
+        const apiResponse = await axios.post("http://b9da-202-125-27-27.ngrok-free.app/api/parse-xml", xmlData, {
             headers: { "Content-Type": "application/xml" },
         });
 
@@ -54,7 +54,7 @@ app.post("/submit-xml", async (req, res) => {
         const cId = form?.cId || "Unknown";
         const address = form?.address || "Unknown";
 
-        // Create an object to send as JSON response
+        
         const responseData = {
             firstname,
             lastname,
@@ -67,7 +67,7 @@ app.post("/submit-xml", async (req, res) => {
         res.json(responseData);
 
     } catch (error) {
-        //console.error("Error:", error);
+        console.error("Error:", error);
         res.status(500).json({ error: "Error: Unable to process the XML input." });
     }
 });

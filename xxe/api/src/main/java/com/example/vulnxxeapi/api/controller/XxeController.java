@@ -29,12 +29,15 @@ public class XxeController {
             // Setting up vulnerable DocumentBuilderFactory
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 
-            // do NOT disable XXE processing
-            // [insert disabling of XXE processing]
-//            dbFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", false);
-//            dbFactory.setFeature("http://xml.org/sax/features/external-general-entities", false);
-//            dbFactory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
-
+            // Disable Doctype Declarations 
+            dbFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            // Disable the usage of external DTDs 
+            dbFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            // Disable the inclusion of entities
+            dbFactory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            // Disable External entities
+            dbFactory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document rootElement = dBuilder.parse(new InputSource(new StringReader(xml)));
 
@@ -55,6 +58,16 @@ public class XxeController {
     private String createXmlResponse(Document inputDoc) throws Exception {
         // Create a new document for the response XML
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
+        // Disable Doctype Declarations 
+        factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        // Disable the usage of external DTDs 
+        factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+        // Disable the inclusion of entities
+        factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+        // Disable External entities
+        factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document responseDoc = builder.newDocument();
 
